@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मेरी कहानियाँ - हिंदी स्टोरी वेबसाइट</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>कहानी संग्रह</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home"><i class="fas fa-home"></i> होम</a></li>
+                <li><a href="#stories"><i class="fas fa-book"></i> कहानियाँ</a></li>
+                <li><a href="#categories"><i class="fas fa-tags"></i> श्रेणियाँ</a></li>
+                <li><a href="#about"><i class="fas fa-info-circle"></i> हमारे बारे में</a></li>
+                <li><a href="admin.html" class="admin-btn"><i class="fas fa-lock"></i> एडमिन</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="#home"><i class="fas fa-home"></i> होम</a></li>
+            <li><a href="#stories"><i class="fas fa-book"></i> कहानियाँ</a></li>
+            <li><a href="#categories"><i class="fas fa-tags"></i> श्रेणियाँ</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> हमारे बारे में</a></li>
+            <li><a href="admin.html"><i class="fas fa-lock"></i> एडमिन</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>हिंदी कहानियों का अद्भुत संसार</h2>
+                <p>पढ़िए दिल छू लेने वाली कहानियाँ, लिखिए अपने अनुभव, और जोड़िए इस खूबसूरत सफर में।</p>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="कहानी खोजें...">
+                    <button onclick="searchStories()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stories Section -->
+    <section id="stories" class="stories-section">
+        <div class="container">
+            <h2 class="section-title">ताज़ा कहानियाँ</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterStories('all')">सभी</button>
+                <button class="filter-btn" onclick="filterStories('moral')">नैतिक</button>
+                <button class="filter-btn" onclick="filterStories('love')">प्रेम</button>
+                <button class="filter-btn" onclick="filterStories('comedy')">हास्य</button>
+                <button class="filter-btn" onclick="filterStories('horror')">डरावनी</button>
+            </div>
+            
+            <div class="stories-grid" id="storiesContainer">
+                <!-- Stories will be loaded here by JavaScript -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> कहानियाँ लोड हो रही हैं...
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i> पिछला</button>
+                <span id="pageInfo">पेज 1</span>
+                <button id="nextBtn" onclick="changePage(1)">अगला <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story Modal -->
+    <div id="storyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <h2 id="modalTitle"></h2>
+                <div class="story-meta">
+                    <span id="modalCategory"></span>
+                    <span id="modalDate"></span>
+                    <span id="modalViews"></span>
+                </div>
+                <div id="modalContent"></div>
+                <div class="story-actions">
+                    <button onclick="likeStory()"><i class="fas fa-heart"></i> <span id="likeCount">0</span></button>
+                    <button onclick="shareStory()"><i class="fas fa-share"></i> शेयर</button>
+                    <button onclick="printStory()"><i class="fas fa-print"></i> प्रिंट</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-book-open"></i> कहानी संग्रह</h3>
+                    <p>हिंदी साहित्य को डिजिटल दुनिया में लेकर आना हमारा मिशन है।</p>
+                </div>
+                <div class="footer-section">
+                    <h3>त्वरित लिंक</h3>
+                    <ul>
+                        <li><a href="#home">होम</a></li>
+                        <li><a href="#stories">कहानियाँ</a></li>
+                        <li><a href="admin.html">एडमिन लॉगिन</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>संपर्क करें</h3>
+                    <p><i class="fas fa-envelope"></i> contact@kahani.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 कहानी संग्रह. सर्वाधिकार सुरक्षित.</p>
+                <p id="stats">कुल कहानियाँ: <span id="totalStories">0</span> | कुल पाठक: <span id="totalViews">0</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+                              </html>
