@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>एडमिन पैनल - कहानी वेबसाइट</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="login-screen">
+            <div class="login-box">
+                <h2><i class="fas fa-lock"></i> एडमिन लॉगिन</h2>
+                <div class="input-group">
+                    <label><i class="fas fa-user"></i> यूज़रनेम</label>
+                    <input type="text" id="username" placeholder="admin">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-key"></i> पासवर्ड</label>
+                    <input type="password" id="password" placeholder="••••••••">
+                </div>
+                <button onclick="adminLogin()" class="login-btn">लॉगिन</button>
+                <p class="note">डिफ़ॉल्ट: username: admin, password: admin123</p>
+                <p id="loginError" class="error"></p>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard (Hidden by default) -->
+        <div id="dashboard" class="dashboard" style="display: none;">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-cogs"></i> एडमिन पैनल</h3>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="active" onclick="showSection('stories')"><i class="fas fa-book"></i> कहानियाँ</li>
+                    <li onclick="showSection('addStory')"><i class="fas fa-plus-circle"></i> नई कहानी</li>
+                    <li onclick="showSection('analytics')"><i class="fas fa-chart-bar"></i> विश्लेषण</li>
+                    <li onclick="showSection('settings')"><i class="fas fa-cog"></i> सेटिंग्स</li>
+                    <li onclick="logout()"><i class="fas fa-sign-out-alt"></i> लॉगआउट</li>
+                </ul>
+                <div class="sidebar-footer">
+                    <p id="adminStats">लोडिंग...</p>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Stories Management -->
+                <div id="storiesSection" class="section">
+                    <h2><i class="fas fa-book"></i> सभी कहानियाँ</h2>
+                    <div class="search-controls">
+                        <input type="text" id="adminSearch" placeholder="कहानी खोजें..." onkeyup="searchAdminStories()">
+                        <select id="categoryFilter" onchange="filterAdminStories()">
+                            <option value="all">सभी श्रेणियाँ</option>
+                            <option value="moral">नैतिक</option>
+                            <option value="love">प्रेम</option>
+                            <option value="comedy">हास्य</option>
+                            <option value="horror">डरावनी</option>
+                        </select>
+                    </div>
+                    
+                    <div class="stories-table-container">
+                        <table class="stories-table">
+                            <thead>
+                                <tr>
+                                    <th>क्रम</th>
+                                    <th>शीर्षक</th>
+                                    <th>श्रेणी</th>
+                                    <th>दिनांक</th>
+                                    <th>पठन</th>
+                                    <th>क्रियाएँ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminStoriesTable">
+                                <!-- Stories will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add/Edit Story -->
+                <div id="addStorySection" class="section" style="display: none;">
+                    <h2><i class="fas fa-plus-circle"></i> नई कहानी जोड़ें</h2>
+                    <div class="story-form">
+                        <div class="form-group">
+                            <label>कहानी का शीर्षक</label>
+                            <input type="text" id="storyTitle" placeholder="कहानी का शीर्षक दर्ज करें">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>श्रेणी चुनें</label>
+                            <select id="storyCategory">
+                                <option value="moral">नैतिक कहानी</option>
+                                <option value="love">प्रेम कहानी</option>
+                                <option value="comedy">हास्य कहानी</option>
+                                <option value="horror">डरावनी कहानी</option>
+                                <option value="inspirational">प्रेरणादायक</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>कहानी विवरण (संक्षिप्त)</label>
+                            <textarea id="storyDescription" placeholder="संक्षिप्त विवरण" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>कहानी विस्तार से</label>
+                            <div id="editor"></div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button onclick="saveStory()" class="save-btn"><i class="fas fa-save"></i> कहानी सहेजें</button>
+                            <button onclick="clearForm()" class="clear-btn"><i class="fas fa-times"></i> साफ करें</button>
+                            <button onclick="previewStory()" class="preview-btn"><i class="fas fa-eye"></i> प्रिव्यू</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics -->
+                <div id="analyticsSection" class="section" style="display: none;">
+                    <h2><i class="fas fa-chart-bar"></i> वेबसाइट विश्लेषण</h2>
+                    <div class="analytics-cards">
+                        <div class="card">
+                            <h3><i class="fas fa-book"></i> कुल कहानियाँ</h3>
+                            <p id="totalStoriesCount">0</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-eye"></i> कुल पठन</h3>
+                            <p id="totalViewsCount">0</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-heart"></i> कुल लाइक्स</h3>
+                            <p id="totalLikesCount">0</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-users"></i> सक्रिय पाठक</h3>
+                            <p id="activeReaders">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>श्रेणी अनुसार कहानियाँ</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div id="settingsSection" class="section" style="display: none;">
+                    <h2><i class="fas fa-cog"></i> वेबसाइट सेटिंग्स</h2>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label>वेबसाइट का नाम</label>
+                            <input type="text" id="siteName" value="कहानी संग्रह">
+                        </div>
+                        <div class="form-group">
+                            <label>वेबसाइट विवरण</label>
+                            <textarea id="siteDescription" rows="3">हिंदी कहानियों का अद्भुत संसार</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>एडमिन पासवर्ड बदलें</label>
+                            <input type="password" id="newPassword" placeholder="नया पासवर्ड">
+                            <input type="password" id="confirmPassword" placeholder="पासवर्ड पुष्टि करें">
+                        </div>
+                        <button onclick="saveSettings()" class="save-btn"><i class="fas fa-save"></i> सेटिंग्स सहेजें</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closePreview()">&times;</span>
+            <h2 id="previewTitle"></h2>
+            <div id="previewContent"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
